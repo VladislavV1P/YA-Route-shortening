@@ -8,14 +8,10 @@ let invertAction = ["TOP": "BOTTOM", "BOTTOM": "TOP", "LEFT":"RIGHT", "RIGHT": "
 
 while !availableData {
     if let input = readLine() {
-            let route = input.split(separator: " ")
-        if route.count > 1 {
-            let actionRoute = String(route[0])
-            let distanceRoute = Int(route[1]) ?? 0
-            if distanceRoute > 0 {
-                originalRoute.append((action: actionRoute, distance: distanceRoute))
-            }
-        }
+        let route = input.split(separator: " ")
+        let actionRoute = String(route[0])
+        let distanceRoute = Int(route[1]) ?? 0
+        originalRoute.append((action: actionRoute, distance: distanceRoute))
     } else {
         availableData = true
     }
@@ -23,32 +19,32 @@ while !availableData {
 
 //test data
 let inputTest = """
-LEFT
 TOP 50
 BOTTOM 50
-TOP 10
+TOP 50
 """
 
 let dataTest = inputTest.split(separator: "\n")
 for item in dataTest {
     let routeTest = item.split(separator: " ")
-    if routeTest.count > 1 {
-        let actionRouteTest = String(routeTest[0])
-        let distanceRouteTest = Int(routeTest[1])!
-        if distanceRouteTest > 0 {
-            originalRoute.append((action: actionRouteTest, distance: distanceRouteTest))
-        }
-    }
+    let actionRouteTest = String(routeTest[0])
+    let distanceRouteTest = Int(routeTest[1])!
+    originalRoute.append((action: actionRouteTest, distance: distanceRouteTest))
 }
 //end test
 
-if !originalRoute.isEmpty {
-    shortRoute.append(originalRoute[0])
-}
+shortRoute.append(originalRoute[0])
 
 if originalRoute.count > 1 {
     for index in 1..<originalRoute.count {
-        var way = shortRoute.last!
+        var way = (action: "", distance: 0)
+        if let lastWay = shortRoute.last {
+            way = lastWay
+        } else {
+            shortRoute.append(originalRoute[index])
+            continue
+        }
+        
         let step = originalRoute[index]
         
         if way.action == step.action {
@@ -60,6 +56,8 @@ if originalRoute.count > 1 {
                 way.distance = step.distance - way.distance
                 way.action = step.action
                 shortRoute.removeLast()
+            } else {
+                
             }
         } else {
             way.action = step.action
@@ -81,7 +79,6 @@ if originalRoute.count > 1 {
         }
     }
 }
-
 
 if !shortRoute.isEmpty {
     for step in shortRoute {
